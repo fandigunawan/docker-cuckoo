@@ -39,6 +39,12 @@ with open("/cuckoo/conf/cuckoo.conf", 'w') as cfile:
     if os.environ.get('DATABASE_CONNECTION'):
         cuckoo_cfg.set('database', 'connection', os.environ['DATABASE_CONNECTION'])
 
+    if os.environ.get('API_TOKEN'):
+        cuckoo_cfg.set('cuckoo', 'api_token', os.environ['API_TOKEN'])
+
+    if os.environ.get('WEB_SECRET'):
+        cuckoo_cfg.set('cuckoo', 'web_secret', os.environ['WEB_SECRET'])
+
     cuckoo_cfg.write(cfile)
 
 
@@ -70,6 +76,49 @@ with open("/cuckoo/conf/auxiliary.conf", 'w') as cfile:
         auxiliary_cfg.set('mitm', 'enabled', os.environ['ENABLE_MITM'])
 
     auxiliary_cfg.write(cfile)
+
+xen_cfg = ConfigParser.ConfigParser()
+xen_cfg.read("/cuckoo/conf/xenserver.conf")
+with open("/cuckoo/conf/xenserver.conf", 'w') as cfile:
+    # xen server configuration
+    if os.environ.get('XEN_SRVUSERNAME'):
+        xen_cfg.set('xenserver', 'user', os.environ['XEN_SRVUSERNAME'])
+    
+    if os.environ.get('XEN_SRVPASSWORD'):
+        xen_cfg.set('xenserver', 'password', os.environ['XEN_SRVPASSWORD'])
+
+    if os.environ.get('XEN_SRVURL'):
+        xen_cfg.set('xenserver', 'url', os.environ['XEN_SRVURL'])
+
+    #if os.environ.get('XEN_MACHINES'):
+    #    xen_cfg.set('xenserver', 'machines', os.environ['XEN_MACHINES'])
+
+    if os.environ.get('XEN_SRVINTERFACE'):
+        xen_cfg.set('xenserver', 'interface', os.environ['XEN_SRVINTERFACE'])
+
+    # VM configuration
+    if os.environ.get('XEN_VMUUID'):
+        xen_cfg.set('cuckoo1', 'uuid', os.environ['XEN_VMUUID'])
+
+    if os.environ.get('XEN_VMSNAPSHOT'):
+        xen_cfg.set('cuckoo1', 'snapshot', os.environ['XEN_VMSNAPSHOT'])
+
+    if os.environ.get('XEN_VMPLATFORM'):
+        xen_cfg.set('cuckoo1', 'platform', os.environ['XEN_VMPLATFORM'])
+    
+    if os.environ.get('XEN_VMIP'):
+        xen_cfg.set('cuckoo1', 'ip', os.environ['XEN_VMIP'])
+
+    xen_cfg.write(cfile)
+
+#Setting memory.conf
+memory_cfg = ConfigParser.ConfigParser()
+memory_cfg.read("/cuckoo/conf/memory.conf")
+with open("/cuckoo/conf/memory.conf", 'w') as cfile:
+    if os.environ.get('MEM_GUESTPROFILE'):
+        memory_cfg.set('basic', 'guest_profile', os.environ['MEM_GUESTPROFILE'])
+
+    memory_cfg.write(cfile)
 
 
 sys.exit()
